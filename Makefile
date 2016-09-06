@@ -1,5 +1,5 @@
 EXECUTABLE=fmg
-SOURCES=multigrid.c residual.c smoothing.c matfill.c prolongation.c restriction.c solve.c
+SOURCES=multigrid.c residual.c smoothing.c matfill.c prolongation.c restriction.c solve.c init.c output.c main.c
 
 CC=gcc
 INCLIB=
