@@ -1,0 +1,11 @@
+#!/bin/bash
+
+gcc -c -O3 main.c -o main.o
+gcc -c -O3 ../../src/restriction.c -o restriction.o
+gcc -c -O3 ../../src/prolongation.c -o prolongation.o
+
+gcc -o tst main.o restriction.o prolongation.o  -lm 
+
+./tst $1
+
+rm main.o restriction.o prolongation.o

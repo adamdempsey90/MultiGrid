@@ -1,0 +1,23 @@
+#!/bin/bash
+
+
+rm *.dat 
+gcc -c -O3 main.c -o main.o
+gcc -c -O3 -DFULL ../../src/prolongation.c -o prolongation.o
+gcc -c -O3 ../../src/addint.c -o addint.o
+gcc -c -O3 ../../src/vcycle.c -o vcycle.o
+gcc -c -O3 ../../src/matfill.c -o matfill.o
+gcc -c -O3 -DFULL ../../src/restriction.c -o restriction.o
+gcc -c -O3 ../../src/solve.c -o solve.o
+gcc -c -O3 ../../src/residual.c -o residual.o
+gcc -c -O3 ../../src/smoothing.c -o smoothing.o
+gcc -c -O3 ../../src/output.c -o output.o
+gcc -c -O3 ../../src/multigrid.c -o multigrid.o
+
+gcc -o tst main.o prolongation.o  matfill.o restriction.o solve.o residual.o smoothing.o output.o multigrid.o vcycle.o addint.o -lm 
+
+./tst $1 $2
+
+
+rm  main.o prolongation.o  matfill.o restriction.o solve.o residual.o smoothing.o output.o multigrid.o  vcycle.o addint.o
+python3 plot.py $1 
