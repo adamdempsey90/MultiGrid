@@ -13,7 +13,6 @@ void vcycle(double **u, double *f , int j, const int numpre, const int numpost) 
      * f contains the rhs on the finest grid
      * there are 2^j + 1 points on the finest grid
      */
-    printf("Vcycle %d\n",j);
     if (j == 0) {
     /* Exact solve at bottom of V */
         solve(u[j],f);
@@ -46,7 +45,6 @@ void vcycle(double **u, double *f , int j, const int numpre, const int numpost) 
      * 2.1 Prolongate solution up a level
      */
 
-    printf("V %d\tAddint %d -> %d\n",j,j-1,j);
     addint(u[j],u[j-1],tmp,j-1);
 
     /* Apply any post smoothing */

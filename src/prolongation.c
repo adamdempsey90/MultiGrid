@@ -22,24 +22,6 @@ void prolongate2D(double *uf, const double *uc, const int level) {
         }
     }
 
-//    for(ic=0;ic<nc;ic++) {
-//        for(jc=0;jc<nc;jc++) {
-//            uf[2*jc + (2*ic+1)*nf] = .5*(uc[jc+nc*ic] + uf[jc + (ic+1)*nf]);
-//        }
-//    }
-//    for(ic=0;ic<nc;ic++) {
-//        for(jc=0;jc<nc;jc++) {
-//            uf[(2*jc+1) + (2*ic)*nf] = .5*(uc[jc+nc*ic] + uf[jc+1 + (ic)*nf]);
-//        }
-//    }
-//    for(ic=0;ic<nc;ic++) {
-//        for(jc=0;jc<nc;jc++) {
-//            uf[(2*jc+1)+ (2*ic+1)*nf] = .25*(uc[jc+nc*ic] + uf[jc + (ic+1)*nf]
-//                                        +uf[jc+1+ic*nf] + uf[jc+1+(ic+1)*nf]);
-//        }
-//    }
-
-
 /* Odd # columns horizontal interpolation */
 
     for(iif = 1; iif < nf -1 ; iif += 2) {

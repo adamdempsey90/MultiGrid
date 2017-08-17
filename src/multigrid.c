@@ -18,9 +18,8 @@ void multigrid(double *u, double *f, const int lmax, const int numcycles, const 
  * coarsened to the lmin level
  */
 
-    int ii,jj;
-    int i,j,k,l;
-    int n,n_curr;
+    int i,l;
+    int n;
     int nlevels = lmax + 1;
 
 
@@ -39,7 +38,6 @@ void multigrid(double *u, double *f, const int lmax, const int numcycles, const 
         res[i] = (double *)malloc(sizeof(double)*n*n);
     }
 
-    printf("Allocated\n");
 
 /* Copy initial values to finest grid */
 
@@ -56,42 +54,21 @@ void multigrid(double *u, double *f, const int lmax, const int numcycles, const 
         matfill(res[i], NULL, ngrid[i]);
     }
 
-    printf("Coarse\n");
-    for(i=0;i<3;i++) {
-        for(j=0;j<3;j++) {
-            printf("%lg\t",rhs[0][j+3*i]);
-        }
-        printf("\n");
-    }
-
-    printf("2\n");
 /* Solve on lowest level */
 
     solve(sol[0],rhs[0]);
-    for(i=0;i<3;i++) {
-        for(j=0;j<3;j++) {
-            printf("%lg\t",rhs[0][j+i*3]);
-        }
-        printf("\n");
-    }
-
-    printf("3\n");
 /* Start FMG */
- //   vcycle(sol,rhs,res,lmax,numpre,numpost);
+
     for(l=0;l<lmax;l++) {
 
-        printf("Starting Vcycle %d\n",l);
         /* Move solution up a level */
         prolongate2D(sol[l+1], sol[l], l);
-        printf("3.1\n");
     
         /* Vcycles */
         for(i=0; i < numcycles; i++) {
             vcycle(sol,rhs[l+1],l+1,numpre,numpost);
         }
-        printf("Finished Vcycle %d\n",l);
     }
-    printf("Ended FMG\n");
 
     matfill(u,sol[lmax],ngrid[lmax]);
 
@@ -101,22 +78,14 @@ void multigrid(double *u, double *f, const int lmax, const int numcycles, const 
 
 /* Free grid storage */
     for(i=0; i<=lmax;i++) {
-        printf("free sol %d\n",i);
         free(sol[i]); 
-        printf("free rhs %d\n",i);
         free(rhs[i]); 
-        printf("free res %d\n",i);
         free(res[i]); 
     }
 
-    printf("5\n");
-    printf("free sol\n");
     free(sol);
-    printf("free rhs\n");
     free(rhs);
-    printf("free res\n");
     free(res);
-    printf("free ngrid\n");
     free(ngrid);
 
     return;

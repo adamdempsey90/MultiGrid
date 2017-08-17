@@ -12,14 +12,21 @@ double source(double x, double y) {
 }
 
 double potential(double x, double y) {
-        return 0.0;
+        return 0.0*x*y;
         //return pow(x - 1.,2.)*pow(sin(y - 1.),2.)*x*(2.*y + 1. - cos(y));
     }
 
 int main(int argc, char *argv[]) {
         
-        int lmax = atoi(argv[1]);
-        int numpre = atoi(argv[2]);
+        int lmax, numpre;
+        lmax = 6;
+        numpre = 2;
+        if (argc > 1) {
+            lmax = atoi(argv[1]);
+        }
+        if (argc > 2) {
+            numpre = atoi(argv[2]);
+        }
 
         int n = 1 + (2 << lmax);
         int size = n*n;
@@ -56,41 +63,26 @@ int main(int argc, char *argv[]) {
 
         FILE *f;
 
-        f = fopen("grid.dat","w");
+        f = fopen("output/grid.dat","w");
         fwrite(x,sizeof(double),n,f);
         fwrite(y,sizeof(double),n,f);
         fclose(f);
-        f = fopen("source.dat","w");
+        f = fopen("output/source.dat","w");
         fwrite(u,sizeof(double),size,f);
         fclose(f);
-        f = fopen("answer.dat","w");
+        f = fopen("output/answer.dat","w");
         fwrite(ans,sizeof(double),size,f);
         fclose(f);
 
 
         multigrid(ans,u,lmax, 1 ,numpre,numpre);
 
-        /*
-    for(i=0;i<1+(2<<lmax);i++) {
-        for(j=0;j<1+(2<<lmax);j++) {
-            printf("%lg\t",ans[j+i*(1 + (2<<lmax))]);
-        }
-        printf("\n");
-    }
-    */
     
-    f = fopen("result.dat","w");
+    f = fopen("output/result.dat","w");
     fwrite(ans,sizeof(double),size,f);
     fclose(f);
 
-    double L2err = 0;
-    int indx;
 
-    for(i=0;i<n*n;i++) L2err += pow(res[i] - ans[i],2.);
-
-    L2err = sqrt(L2err/(n*n));
-
-    printf("L2error: %.5e\n",L2err);
     
 
     free(u);
@@ -98,4 +90,5 @@ int main(int argc, char *argv[]) {
     free(x);
     free(y);
     free(res);
+    return 1;
 }
