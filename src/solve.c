@@ -1,26 +1,37 @@
 #include "stdlib.h"
-extern void matfill(double *, double *, int);
-void solve(double *u, double *f, const int level) {
+#include "stdio.h"
+void solve(double *u, double *f) {
     /* Exact solution for poisson problem on a 3x3 grid where,
      * all points are boundary points except for a single 
      * interior point.
      * If level > 0 then we make no modifications to u
      */
-    int i,j,indx,n;
-    double h,h2;
-    n = 1 + (2 << level);
+    int i,j,indx;
+    double h, h2;
+    int n = 3;
+    printf("SOLVE\n");
 
-    if (n != 3) {
-        return;
-    }
-
-    h = 1./(n-1);
+    h = .5;
     h2 = h*h;
 
-    i = 1; j = 1;
+    for(i=0;i<n*n;i++) u[i] = 0;
 
-    indx = j + n*i;
-    matfill(u,NULL,n);
-    u[indx] = .25*(u[indx+n] + u[indx-n] + u[indx+1] + u[indx-1] - h2*f[indx]); 
+    indx = 1 + n;
+    u[indx] = -h2*f[indx]*.25;
+    printf("RHS\n");
+    for(i=0;i<n;i++) {
+        for(j=0;j<n;j++) {
+            printf("%lg\t",f[j+i*n]);
+        }
+        printf("\n");
+    }
+
+    printf("SOL\n");
+    for(i=0;i<n;i++) {
+        for(j=0;j<n;j++) {
+            printf("%lg\t",u[j+i*n]);
+        }
+        printf("\n");
+    }
     return;
 }

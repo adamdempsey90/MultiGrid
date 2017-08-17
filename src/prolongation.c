@@ -14,6 +14,7 @@ void prolongate2D(double *uf, const double *uc, const int level) {
     nc += 1;
     nf += 1;
 
+
 /* Copy values at matching nodes */
     for(ic=0; ic < nc; ic++) {
         for(jc = 0; jc < nc; jc++) {
@@ -21,10 +22,28 @@ void prolongate2D(double *uf, const double *uc, const int level) {
         }
     }
 
+//    for(ic=0;ic<nc;ic++) {
+//        for(jc=0;jc<nc;jc++) {
+//            uf[2*jc + (2*ic+1)*nf] = .5*(uc[jc+nc*ic] + uf[jc + (ic+1)*nf]);
+//        }
+//    }
+//    for(ic=0;ic<nc;ic++) {
+//        for(jc=0;jc<nc;jc++) {
+//            uf[(2*jc+1) + (2*ic)*nf] = .5*(uc[jc+nc*ic] + uf[jc+1 + (ic)*nf]);
+//        }
+//    }
+//    for(ic=0;ic<nc;ic++) {
+//        for(jc=0;jc<nc;jc++) {
+//            uf[(2*jc+1)+ (2*ic+1)*nf] = .25*(uc[jc+nc*ic] + uf[jc + (ic+1)*nf]
+//                                        +uf[jc+1+ic*nf] + uf[jc+1+(ic+1)*nf]);
+//        }
+//    }
+
+
 /* Odd # columns horizontal interpolation */
 
-    for(iif = 0; iif < nf; iif += 2) {
-        for(jf=1; jf < nf; jf +=2) {
+    for(iif = 1; iif < nf -1 ; iif += 2) {
+        for(jf=2; jf < nf; jf +=2) {
             indx = jf + iif*nf;
             uf[indx] = .5*( uf[indx - nf] + uf[indx + nf]);
         }
@@ -32,14 +51,27 @@ void prolongate2D(double *uf, const double *uc, const int level) {
 
 /* Even # colums vertical interpolation */
 
-    for(iif=1; iif < nf; iif +=2) {
-        for(jf=0;jf<nf;jf+=2) {
+    for(iif=2; iif < nf; iif +=2) {
+        for(jf=1;jf<nf-1;jf+=2) {
             indx = jf +iif*nf;
             uf[indx] = .5*(uf[indx-1] + uf[indx+1]);
         }
     }
 
-/* In between points */
+/* Do corner points if FULL weighting is selected */
+    for(iif = 1; iif < nf -1 ; iif +=2 ) {
+        for(jf = 1; jf < nf-1;jf+=2) {
+            indx = jf+iif*nf;
+#ifdef FULL
+            uf[indx] = .25*(uf[indx+nf] + uf[indx+1] + uf[indx-nf] + uf[indx-1]);
+#else
+            uf[indx] = 0.;
+#endif
+        }
+    }
+
+
+/*
     for(iif=1; iif < nf; iif += 2) {
         for(jf=1; jf<nf; jf+=2) {
             indx = jf + iif*nf;
@@ -53,6 +85,7 @@ void prolongate2D(double *uf, const double *uc, const int level) {
                                + uf[indx -1 + nf]);
         }
     }
+*/
 
     return;
 }

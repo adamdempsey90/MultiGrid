@@ -21,7 +21,7 @@ void gauss_seidel(double *u, const double *f, const int level, const int numiter
                 indx = j + n*i;
                 u[indx] = .25*(u[indx+1] + u[indx-1]
                             +  u[indx + n] + u[indx-n]
-                            + h2*f[indx]);
+                            - h2*f[indx]);
             }
         }
     /* Black Points */
@@ -30,11 +30,12 @@ void gauss_seidel(double *u, const double *f, const int level, const int numiter
                 indx= j + n*i;
                 u[indx] = .25*(u[indx+1] + u[indx-1]
                             +  u[indx + n] + u[indx-n]
-                            + h2*f[indx]);
+                            - h2*f[indx]);
             }
         }
 
     }
+
 
     return;
 }
